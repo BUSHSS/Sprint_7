@@ -1,20 +1,20 @@
-public class TestDataCourier {
+public class DataCourier {
 
 
     private String login;
     private String password;
-    private String firstName;
 
     // конструктор со всеми параметрами
-    public TestDataCourier(String login, String password, String firstName) {
+    public DataCourier(String login, String password) {
         this.login = login;
         this.password = password;
-        this.firstName = firstName;
     }
 
+
     // конструктор без параметров
-    public TestDataCourier() {
+    public DataCourier() {
     }
+
 
     public String getLogin() {
         return login;
@@ -32,13 +32,6 @@ public class TestDataCourier {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
 
 
 
