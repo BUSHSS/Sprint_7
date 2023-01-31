@@ -1,4 +1,5 @@
 
+import com.google.gson.Gson;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
@@ -16,6 +17,8 @@ import static org.hamcrest.Matchers.*;
 
 @RunWith(Parameterized.class)
 public class TestCreateСourier {
+
+
 
     @Before
     public void setUp() {
@@ -52,6 +55,7 @@ public class TestCreateСourier {
             {
                 compareBody(response);
                 createCopy(dataCourier);
+                deleteData(dataCourier);
             }
     }
 
@@ -93,5 +97,27 @@ public class TestCreateСourier {
                     .when()
                     .post("/api/v1/courier").then().statusCode(409);
     }
+
+    @Step("Шаг: Удаление созданного курьера")
+    public void deleteData(DataCourier dataCourier) {
+
+        Response response2 = given()
+                .header("Content-type", "application/json")
+                .and()
+                .body(dataCourier)
+                .when()
+                .post("/api/v1/courier/login");
+
+           if (response2.statusCode() == 200) {
+               int id = response2.then().extract().body().path("id");
+               String idJson="{\"id\" : "+id+"}";
+            given()
+                    .header("Content-type", "application/json")
+                    .and().body(idJson)
+                    .delete("/api/v1/courier/"+id);
+
+        }
+    }
+
 
 }

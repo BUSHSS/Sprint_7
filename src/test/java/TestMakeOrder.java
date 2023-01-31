@@ -14,7 +14,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 
 @RunWith(Parameterized.class)
-public class TestTakeOrder {
+public class TestMakeOrder {
     @Before
     public void setUp() {
 
@@ -31,7 +31,7 @@ public class TestTakeOrder {
     String comment;
     List<String> color;
 
-    public TestTakeOrder(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment, List<String> color) {
+    public TestMakeOrder(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment, List<String> color) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -59,6 +59,7 @@ public class TestTakeOrder {
     public void сreateOrderTrue() {
         Response response =sendGetRequest();
         compareResponse(response);
+        cancelOrder(response);
     }
     @Step("Шаг: Отправка запроса на создание заказа /api/v1/orders")
     public Response sendGetRequest(){
@@ -76,6 +77,19 @@ public class TestTakeOrder {
     public void compareResponse(Response response){
         response.then().assertThat().body( "track", notNullValue())
                 .and().statusCode(201 );
+    }
+
+    @Step("Шаг: Отмена созданного заказа")
+    public void cancelOrder(Response response) {
+        if (response.statusCode() == 201) {
+            int track = response.then().extract().body().path("track");
+            String trackJson="{\"track\" : "+ track +"}";
+            given()
+                    .header("Content-type", "application/json")
+                    .and().body(trackJson)
+                    .put("/api/v1/orders/cancel");
+
+        }
     }
 
 }
